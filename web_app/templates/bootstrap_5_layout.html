@@ -4,45 +4,59 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <!-- PAGE TITLE -->
-    {% set default_title = "ABC Restaurant | Made with the Flask Sheets Template 2024" %}
-    {% set page_title = page_title | default(default_title) %}
-    <title>{{ page_title }}</title>
+    <!-- PAGE TITLE (CAN BE CUSTOMIZED BY CHILD PAGES) -->
+    {% set default_title = "ABC Restaurant | Made with the Flask Sheets Template 2024" -%}
+    {% set page_title = page_title|default(default_title) -%}
+    <title>{{page_title}}</title>
 
-    <!-- Favicon -->
     <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='favicon.ico') }}">
 
-    <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css" 
-          integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6" 
-          crossorigin="anonymous" rel="stylesheet">
-
-    <!-- Bootstrap Icons -->
+    <!-- LOAD BOOSTRAP CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6" crossorigin="anonymous">
+    <!-- LOAD BOOTSTRAP ICONS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
 
-    <!-- Google Analytics -->
+    <!-- CONFIGURE GOOGLE ANALYTICS  -->
     <script async src="https://www.googletagmanager.com/gtag/js?id={{ config.GA_TRACKER_ID }}"></script>
     <script>
         window.dataLayer = window.dataLayer || [];
-        function gtag(){ dataLayer.push(arguments); }
+        function gtag(){dataLayer.push(arguments);}
         gtag('js', new Date());
         gtag('config', '{{ config.GA_TRACKER_ID }}');
+
+        // suppress warnings in firefox (not working / need to figure our what domain to use)
+        // see: https://stackoverflow.com/questions/62569419/how-to-set-secure-attribute-of-the-cookies-used-by-google-analytics-global-sit
+        //gtag('config', '{{ config.GA_TRACKER_ID }}', {
+        //    cookie_domain: '{{ config.GA_DOMAIN }}',
+        //    cookie_flags: 'SameSite=None;Secure',
+        //})
     </script>
 
-    <!-- Custom CSS -->
+    <!-- YOUR CUSTOM CSS STYLES HERE -->
     <style>
-        /* Custom styles go here */
+
+        /* ... */
+
     </style>
 
-    <!-- Allows child pages to inject head content -->
-    {% block head %}{% endblock %}
+    <!-- HEAD BLOCK (ALLOWS CHILD PAGES TO INJECT HEAD CONTENT)  -->
+    {% block head %}
+    {% endblock %}
 </head>
 <body>
 
-    <!-- Flash Messaging -->
+    <!--
+        FLASH MESSAGING
+        https://fl†ask.palletsprojects.com/en/1.1.x/patterns/flashing/
+        https://getbootstrap.com/docs/4.3/components/alerts/
+    -->
     {% with messages = get_flashed_messages(with_categories=true) %}
       {% if messages %}
         {% for category, message in messages %}
+            <!--
+                BOOTSTRAP ALERTS
+                https://getbootstrap.com/docs/5.0/components/alerts/#dismissing
+            -->
             <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert" style="margin-bottom:0;">
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 {{ message }}
@@ -51,52 +65,121 @@
       {% endif %}
     {% endwith %}
 
-    <!-- Site Navigation Links -->
-    {% set nav_links = session['current_user'] ? protected_nav : public_nav %}
+    <!--
+        SITE NAVIGATION LINKS
+        EACH ENTRY FOLLOWS THE FORMAT: ("/PATH", UNIQUE_ID, TITLE)
+            PATH IS USED AS THE LINK HREF VALUE
+            UNIQUE_ID IS USED FOR SETTING THE ACTIVE PAGE (SHOULD MATCH THE ACTIVE PAGE VALUE SET IN THE CHILD PAGE)
+            TITLE IS DISPLAYED AS THE LINK TEXT
+    -->
+    {% set public_nav = [
+      ('/about', 'about', 'About'),
+      ('/products', 'products', 'Products'),
+      ('/login', 'login', 'Login'),
+    ] -%}
 
-    <!-- Navbar -->
+    {% set protected_nav = [
+      ('/about', 'about', 'About'),
+      ('/products', 'products', 'Products'),
+      ('/user/orders', 'user_orders', 'Orders'),
+    ] -%}
+
+    <!--
+        ACTIVE PAGE (ALLOWS CHILD PAGES TO DESIGNATE THEY ARE THE ACTIVE PAGE)
+        CHILD PAGES SHOULD SET ACTIVE PAGE TO ONE OF THE UNIQUE_ID VALUES REGISTERED IN THE SITE NAVIGATION LINKS
+    -->
+    {% set active_page = active_page|default('home') -%}
+
+    <!--
+        BOOTSTRAP NAV
+        https://jinja.palletsprojects.com/en/2.11.x/tricks/
+        https://getbootstrap.com/docs/5.0/components/navbar/
+
+        NAVBAR COLOR
+        https://getbootstrap.com/docs/5.1/components/navbar/#color-schemes
+        https://getbootstrap.com/docs/5.1/customize/color/#theme-colors
+    -->
+
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
         <div class="container-fluid">
             <a class="navbar-brand" href="/">
-                <i class="bi-globe" style="font-size: 1.7rem; color: white;"></i> &nbsp; My App
+                <!--
+                    NAV ICON
+                    https://icons.getbootstrap.com/
+                -->
+                <i class="bi-globe" style="font-size: 1.7rem; color: white;"></i>
+                &nbsp;
+                <!--
+                    NAV TITLE
+                -->
+                My App
             </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
-                    aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
 
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-                    {% for href, page_id, link_text in nav_links %}
+
+                {% if session["current_user"] %}
+                    <!--
+                        PROTECTED NAV (DISPLAYED IF THE USER IS LOGGED IN)
+                    -->
+                    {% for href, page_id, link_text in protected_nav %}
+                        {% if page_id == active_page %}
+                            {% set is_active = "active" -%}
+                        {% else %}
+                            {% set is_active = "" -%}
+                        {% endif %}
                         <li class="nav-item">
-                            <a class="nav-link {{ 'active' if page_id == active_page else '' }}" href="{{ href }}">{{ link_text }}</a>
+                            <a class="nav-link {{ is_active }}" href="{{href}}">{{link_text}}</a>
                         </li>
                     {% endfor %}
-                    {% if session["current_user"] %}
-                        <a href="/user/profile" style="padding:5px">
-                            <img class="rounded-circle" src="{{ session['current_user']['picture'] }}" alt="profile photo" height="32" width="32">
-                        </a>
-                    {% endif %}
+
+                    <a href="/user/profile" style="padding:5px">
+                        <img class="rounded-circle" src="{{ session['current_user']['picture'] or 'https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png' }}" alt="profile photo" height="32px" width="32px">
+                    </a>
+                {% else %}
+                    <!--
+                        PUBLIC NAV (DISPLAYED IF THE USER IS NOT LOGGED IN)
+                    -->
+                    {% for href, page_id, link_text in public_nav %}
+                        {% if page_id == active_page %}
+                            {% set is_active = "active" -%}
+                        {% else %}
+                            {% set is_active = "" -%}
+                        {% endif %}
+                        <li class="nav-item">
+                            <a class="nav-link {{ is_active }}" href="{{href}}">{{link_text}}</a>
+                        </li>
+                    {% endfor %}
+                {% endif %}
                 </ul>
             </div>
         </div>
     </nav>
 
-    <!-- Page Contents -->
     <div class="container" style="margin-top:2em;">
+        <!--
+            PAGE CONTENTS (ALLOWS CHILD PAGES TO INJECT CONTENTS TO THE CONTENT BLOCK)
+        -->
         <div id="content">
-            {% block content %}{% endblock %}
+            {% block content %}
+            {% endblock %}
         </div>
 
-        <!-- Footer -->
+        <!--
+            SHARED FOOTER
+        -->
         <footer style="margin-top:2em; margin-bottom:2em;">
             <hr>
             <div class="row">
-                <div class="col-sm-6">
+                <div class="col-sm-6" style="display: inline; margin-bottom: 5px;">
                     <p class="small">
                         &copy; Copyright 2024 Your Name Here
                     </p>
-                    <p class="small">
+                    <p class="small white-space: nowrap;">
                         Made with the <a href="https://github.com/prof-rossetti/flask-sheets-template-2024">Flask Sheets Template 2024</a>
                     </p>
                 </div>
@@ -104,4 +187,28 @@
         </footer>
     </div>
 
-    <!--
+    <!-- INSTALL BOOSTRAP JAVASCRIPT BUNDLE (ENABLES BOOTSTRAP INTERACTIVE FEATURES) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js" integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf" crossorigin="anonymous"></script>
+
+    <!-- YOUR CUSTOM JAVASCRIPT HERE -->
+    <script type="text/javascript">
+
+        // get debugging info set in the web app init file:
+        var APP_ENV = "{{ config.APP_ENV }}"
+        var APP_VERSION = "{{ config.APP_VERSION }}"
+
+        var debugInfo = {"env": APP_ENV, "version": APP_VERSION}
+        console.log("DEBUG INFO:", debugInfo)
+        // send example event to google analytics:
+        // see: https://developers.google.com/gtagjs/reference/event
+        gtag("event", "debugging_info", debugInfo)
+
+        // ...
+
+    </script>
+
+    <!-- JS FOOT BLOCK (ALLOWS CHILD PAGES TO INJECT JAVASCRIPT FOOTER CONTENT)  -->
+    {% block js_foot %}
+    {% endblock %}
+</body>
+</html>
