@@ -11,9 +11,9 @@ class Product(BaseModel):
     SEEDS = [
         {
             'name': 'Strawberries',
-            'description': 'Juicy organic oranges.',
-            'price': 5.99,
-            'url': ''
+            'description': 'Juicy organic strawberries.',
+            'price': 4.99,
+            'url': 'https://picsum.photos/id/1080/360/200'
         },
         {
             'name': 'Cup of Tea',
@@ -28,6 +28,9 @@ class Product(BaseModel):
             'url': 'https://picsum.photos/id/24/360/200'
         }
     ]
+
+
+
 
 if __name__ == "__main__":
 
