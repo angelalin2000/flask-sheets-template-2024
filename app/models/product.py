@@ -13,7 +13,7 @@ class Product(BaseModel):
             'name': 'Oranges',
             'description': 'Juicy organic oranges.',
             'price': 5.99,
-            'url': 'https://picsum.photos/id/1080/360/200'
+            'url': 'https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.britannica.com%2Fplant%2Forange-fruit&psig=AOvVaw0vtLuoWHxBZ0Dx02DBBaNC&ust=1714857341560000&source=images&cd=vfe&opi=89978449&ved=0CBIQjRxqFwoTCKiKiMiz8oUDFQAAAAAdAAAAABAE'
         },
         {
             'name': 'Cup of Tea',
@@ -56,7 +56,7 @@ if __name__ == "__main__":
 
     print("------------")
     print("FILTERING RECORDS...")
-    matches = Product.where(name="Strawberries")
+    matches = Product.where(name="Oranges")
     print(len(matches))
     product = matches[0]
     print(product.name)
