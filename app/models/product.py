@@ -10,10 +10,10 @@ class Product(BaseModel):
 
     SEEDS = [
         {
-            'name': 'Oranges',
+            'name': 'Strawberries',
             'description': 'Juicy organic oranges.',
             'price': 5.99,
-            'url': 'https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.britannica.com%2Fplant%2Forange-fruit&psig=AOvVaw0vtLuoWHxBZ0Dx02DBBaNC&ust=1714857341560000&source=images&cd=vfe&opi=89978449&ved=0CBIQjRxqFwoTCKiKiMiz8oUDFQAAAAAdAAAAABAE'
+            'url': ''
         },
         {
             'name': 'Cup of Tea',
@@ -28,9 +28,6 @@ class Product(BaseModel):
             'url': 'https://picsum.photos/id/24/360/200'
         }
     ]
-
-Product.create(dict(name="Oranges", price=5.99))
-
 
 if __name__ == "__main__":
 
@@ -56,7 +53,7 @@ if __name__ == "__main__":
 
     print("------------")
     print("FILTERING RECORDS...")
-    matches = Product.where(name="Oranges")
+    matches = Product.where(name="Strawberries")
     print(len(matches))
     product = matches[0]
     print(product.name)
